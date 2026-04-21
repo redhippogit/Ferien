@@ -1,877 +1,862 @@
-import { useState } from “react”;
+<!DOCTYPE html>
 
-const data = {
-claudia: {
-name: “Claudia Meier”,
-role: “Parent / Elternteil”,
-emoji: “👩‍👧‍👦”,
-color: “#4f46e5”,
-accent: “#818cf8”,
-light: “#eef2ff”,
-border: “#c7d2fe”,
-avatar: “CM”,
-tagline: “Working mother, Basel — 2 kids, 14 holiday weeks/year”,
-phases: [
-{
-id: “profile”,
-title: “Creating Family Profile”,
-titleDE: “Familienprofil erstellen”,
-emotion: “😒”,
-emotionLabel: “Frustrated”,
-actions: [
-“Lands on homepage”,
-“Signs up with email & password”,
-“Completes guided family profile setup”,
-“Saves payment method”,
-“Invites kids to complete AI interest profile”,
-“Sets up vacation calendar”,
-“Activates course availability reminders”,
-],
-touchpoints: [“Ferienpass website / app”, “Email / Push / SMS / WhatsApp”, “Payment providers”],
-painPoints: [
-“Homepage feels cluttered, outdated and confusing”,
-“Sign up is generic — no social logins, too many fields”,
-“Kids profiles missing — no personalized views”,
-“No calendar view — planning is fragmented”,
-“Multi-step manual payment process — no modern integrations”,
-],
-opportunities: [
-“Modern, uncluttered, engaging website”,
-“Streamlined sign up / sign in process”,
-“Integrated modern payment methods (TWINT, Apple Pay, PayPal)”,
-“Planning features, calendar view & integration (iCal, Google Calendar)”,
-“Advanced AI personalization & assistance”,
-“Visually engaging kids interest profiling”,
-],
-},
-{
-id: “ferienpass”,
-title: “Purchasing Ferienpass”,
-titleDE: “Ferienpass kaufen”,
-emotion: “🥵”,
-emotionLabel: “Overwhelmed”,
-actions: [
-“Reviews clear benefits and pricing of Ferienpass”,
-“Purchases Ferienpass using saved payment method”,
-“Receives purchase confirmation”,
-“Adds Ferienpass to Apple Wallet or downloads as PDF”,
-],
-touchpoints: [“Ferienpass website / app”, “Email / Push / SMS”, “Digital wallet / PDF viewer”],
-painPoints: [
-“Ferienpass as paywall blocking course access”,
-“Lengthy acquisition of physical pass — repeats annually!”,
-“Physical Ferienpass frequently lost or forgotten”,
-“Multi-step manual payment — no modern integrations”,
-],
-opportunities: [
-“Digital Ferienpass visible to all stakeholders”,
-“TBD: How to connect digital pass with TNW?”,
-“Integrated modern payment methods”,
-“Credit / debit, TWINT, Apple / Google Pay”,
-],
-},
-{
-id: “browse”,
-title: “Browsing Available Courses”,
-titleDE: “Kurse durchsuchen”,
-emotion: “🤔”,
-emotionLabel: “Uncertain”,
-actions: [
-“Receives course availability reminders”,
-“Filters and browses available courses”,
-“Views course details”,
-“Reads reviews and ratings”,
-“Saves favorites”,
-“Organizes favorites into smart lists”,
-“Drags and drops courses onto vacation calendar”,
-],
-touchpoints: [“Ferienpass website / app”, “Email / Push / SMS”],
-painPoints: [
-“Missing personalized suggestions and smart filtering”,
-“Filtering options manual and limited — results feel generic”,
-“Course presentation text heavy — not excitement inducing”,
-“No references, ratings and reviews, missing demand notification”,
-“No shortlists, free seat notifications or calendar views”,
-],
-opportunities: [
-“Visually rich, unified course presentation”,
-“Planning features, calendar view & integration”,
-“Course favorites, lists, drag & drop into calendar”,
-“Advanced AI personalization & assistance”,
-“Smart filtering & course suggestions”,
-],
-},
-{
-id: “booking”,
-title: “Booking a Course”,
-titleDE: “Kurs buchen”,
-emotion: “🤨”,
-emotionLabel: “Anxious”,
-actions: [
-“Selects course from calendar or favorites”,
-“Checks available spots and session dates”,
-“Selects child to enroll”,
-“Reviews course summary and total cost”,
-“Confirms booking (payment timing TBD)”,
-“Receives booking confirmation”,
-“Joins waitlist for fully booked course”,
-],
-touchpoints: [“Ferienpass website / app”, “Email / Push / SMS”, “Payment provider platforms (Stripe, Twint)”],
-painPoints: [
-“Anxiety inducing booking deadline ‘race’”,
-“Unclear & not-visible waitlist and matching process — no guarantees”,
-“Multi-step manual payment — no modern integrations”,
-],
-opportunities: [
-“Integrated modern payment methods (Credit / debit, TWINT, Apple / Google Pay, PayPal)”,
-“Planning features, calendar view & integration”,
-“Visible waitlists, transparent matching”,
-“Ferienpass / course booking gift vouchers”,
-“Advanced AI personalization & assistance”,
-“Alternative suggestions, proactive change advice”,
-],
-},
-{
-id: “changes”,
-title: “Managing Booking Changes”,
-titleDE: “Buchungsänderungen”,
-emotion: “🤬”,
-emotionLabel: “Angry”,
-actions: [
-“Initiates cancellation of booking”,
-“Reviews applicable cancellation policy and fees”,
-“Confirms cancellation”,
-“Receives refund or credit note”,
-“Receives notification of available waitlist spot”,
-“Reviews course details and confirms interest”,
-“Confirms enrollment from waitlist”,
-“Receives AI-based course alternatives”,
-],
-touchpoints: [“Ferienpass website / app”, “Email / Push / SMS”, “Payment provider platforms”],
-painPoints: [
-“Unclear & not-visible waitlist and matching process — no guarantees”,
-“Any organizational change is unpredictable and heavily phone call dependent”,
-“Multi-step manual payment — no modern integrations”,
-],
-opportunities: [
-“Transparent, positively gamified waitlist process”,
-“Integrated modern payment methods”,
-“Visible waitlists, transparent matching”,
-“Advanced AI personalization & assistance”,
-“Alternative suggestions, proactive change advice”,
-],
-},
-{
-id: “courseinfo”,
-title: “Accessing Course Info & Live Updates”,
-titleDE: “Kursinfos & Live-Updates”,
-emotion: “😧”,
-emotionLabel: “Worried”,
-actions: [
-“Receives course updates and change notifications”,
-“Receives standard preparation package”,
-“Receives dynamic preparation updates (location, weather)”,
-“Receives real-time child arrival notice (check-in)”,
-“Receives live updates, location tracking and photos”,
-“Receives incident or welfare notifications if needed”,
-],
-touchpoints: [“Ferienpass website / app”, “Email / Push / SMS / WhatsApp”],
-painPoints: [
-“Quality of course info inconsistent”,
-“Updates are sporadic and heavily email dependent (lagging)”,
-“No live and dynamic updates before course”,
-“No interaction during course”,
-],
-opportunities: [
-“Unified communication content & channels”,
-“Dynamic location & weather updates”,
-“Dedicated course space: content, media, updates”,
-“Advanced AI personalization & assistance”,
-“Live updates on request”,
-],
-},
-{
-id: “assess”,
-title: “Assessing Experience & Replanning”,
-titleDE: “Erfahrung bewerten & neu planen”,
-emotion: “😴”,
-emotionLabel: “Disengaged”,
-actions: [
-“Reviews course tokens and media (photos, art)”,
-“Generates AI-assisted photo memory with music”,
-“Kids complete entertaining age-appropriate course rating”,
-“Adds optional parent comment or rating”,
-“Receives AI-driven course suggestions”,
-“Reviews & updates upcoming holiday weeks”,
-“Shares course experience with family and other parents”,
-],
-touchpoints: [“Ferienpass website / app”, “Email / Push / SMS”, “Social media (TBD)”],
-painPoints: [
-“No calendar view — planning is fragmented and not intuitive”,
-“Only offline feedback form — no transparent reviews or ratings”,
-“Course tokens and media highly inconsistent”,
-],
-opportunities: [
-“Engaging course rating for kids and parents”,
-“Loyalty and reward mechanic features available”,
-“Dedicated course space: content, media, updates”,
-“Planning features, calendar view & integration”,
-“Highlights next key dates and vacation spaces”,
-“Advanced AI personalization & assistance”,
-“Next course suggestions, planning assistance”,
-],
-},
-],
-},
-fabio: {
-name: “Fabio Landi”,
-role: “Course Provider / Kursanbieter”,
-emoji: “🎸”,
-color: “#d97706”,
-accent: “#fbbf24”,
-light: “#fffbeb”,
-border: “#fde68a”,
-avatar: “FL”,
-tagline: “Freelance musician & teacher, Gundeli Basel — 10 years community”,
-phases: [
-{
-id: “provprofile”,
-title: “Creating Provider Profile”,
-titleDE: “Anbieter-Profil erstellen”,
-emotion: “😒”,
-emotionLabel: “Frustrated”,
-actions: [
-“Lands on attractive, modern homepage”,
-“Signs up / signs in with email and password”,
-“Verifies email address and optionally phone number”,
-“Completes guided provider profile setup”,
-“Uploads provider identity materials and brand assets”,
-“Saves payment method”,
-“Customizes provider dashboard and course calendar”,
-“Customizes and activates dashboard reminders”,
-],
-touchpoints: [“Ferienpass website / app”, “Email / Push / SMS / WhatsApp”, “Payment providers”],
-painPoints: [
-“Homepage feels cluttered, outdated and confusing”,
-“Sign up is cumbersome — no social logins, too many fields, missing guidance”,
-“Planning features are limited — no management dashboards, missing calendar view”,
-“Multi-step manual payment — no modern payment integrations”,
-“Provider / brand identity asset library is missing”,
-],
-opportunities: [
-“Modern, uncluttered, engaging website”,
-“Streamlined sign up / sign in process”,
-“Provider brand & course asset library”,
-“Management dashboard, calendar integration (iCal, Google Calendar)”,
-“Integrated modern payment methods (Credit / debit, TWINT, Apple / Google Pay, PayPal)”,
-],
-},
-{
-id: “portfolio”,
-title: “Setting Up Course Portfolio & Offering”,
-titleDE: “Kursportfolio aufbauen”,
-emotion: “🤯”,
-emotionLabel: “Overwhelmed”,
-actions: [
-“Analyzes Ferienpass portfolio and AI-based opportunity flags”,
-“Creates a new course or chooses from course library”,
-“Selects a visual course presentation template”,
-“Uploads raw media content from multiple sources”,
-“Reviews and finalizes AI-drafted course presentation”,
-“Records and uploads personal video message (optional)”,
-“Reviews AI-generated quality readiness checklist before publishing”,
-“Saves course as draft or submits for Ferienpass pricing review”,
-“Receives pricing decision and publishes course with one click”,
-],
-touchpoints: [“Ferienpass website / app”, “Email / Push / SMS”, “Multiple sources of course media”],
-painPoints: [
-“Course presentation is not engaging and consistent — lacking media, text-heavy”,
-“Artificial limits of 10 courses per day limit capacity”,
-“Ferienpass cost-benchmark pricing favors low-cost courses — discouraging high-quality offers”,
-“Course setup lacks assistance — limiting quality of presentation visuals”,
-“Course visuals cannot be saved and reused — even returning courses done from scratch”,
-],
-opportunities: [
-“Unified visual course presentation templates”,
-“Course lists: Drafts, templates, published, folders”,
-“Provider brand & course asset library”,
-“Embedded pricing review & approval workflow”,
-“Comprehensive course presentation assistance”,
-“Advanced AI personalization & assistance”,
-“Ferienpass portfolio opportunity flags”,
-“AI-based quality checklist before publishing”,
-],
-},
-{
-id: “enrollments”,
-title: “Monitoring Enrollments & Waitlist”,
-titleDE: “Anmeldungen & Warteliste”,
-emotion: “🤢”,
-emotionLabel: “Anxious”,
-actions: [
-“Reviews enrollment using provider dashboard (views, signups, revenue forecast)”,
-“Monitors waitlist size and excess demand per course”,
-“Receives demand notifications — waitlist exceeding threshold”,
-“Responds to demand — publishes new cohort with one click”,
-“Receives course enrollment payments”,
-],
-touchpoints: [“Ferienpass website / app”, “Email / Push / SMS / WhatsApp”, “Payment provider platforms”],
-painPoints: [
-“Enrollment status and excess demand hidden from providers”,
-“Participant lists sent only two days in advance”,
-“Providers only receive payments after course is completed — impacts cashflow”,
-],
-opportunities: [
-“Management dashboard, calendar integration”,
-“Live course enrollment and demand waitlist”,
-“Customizable notifications & action workflows”,
-“Category course comparison and standings”,
-“Integrated modern payment methods”,
-“TBD: Waitlist process and matching logic”,
-“TBD: Payment and cancellation variants”,
-],
-},
-{
-id: “delivering”,
-title: “Delivering the Course & Providing Updates”,
-titleDE: “Kurs durchführen & Updates”,
-emotion: “😊”,
-emotionLabel: “Engaged”,
-actions: [
-“Reviews participant details in dedicated course space”,
-“Sends out standard preparation package to participants”,
-“Sends out one-off course updates using notification templates”,
-“Receives dynamic preparation updates (location, weather)”,
-“Checks in kids on arrival (triggering real-time arrival notice to parents)”,
-“Shares live updates, location and photos in course space”,
-“Sends incident or welfare notifications if needed”,
-],
-touchpoints: [“Ferienpass website / app”, “Email / Push / SMS / WhatsApp”],
-painPoints: [
-“No guidance or support on communication before and during courses”,
-“No dedicated course space to upload course tokens and media”,
-],
-opportunities: [
-“Unified communication templates and channels”,
-“Dedicated course space: content, media, updates”,
-“Dynamic location & weather updates”,
-“Advanced AI personalization & assistance”,
-“Live updates from dedicated course space”,
-],
-},
-{
-id: “performance”,
-title: “Assessing Performance & Replanning”,
-titleDE: “Performance & Neuplanung”,
-emotion: “🤔”,
-emotionLabel: “Reflective”,
-actions: [
-“Reviews and curates course tokens and media”,
-“Generates AI-assisted photo memory for future course presentations”,
-“Records and uploads personal thank you message”,
-“Reviews incoming kids and parent ratings and comments”,
-“Responds individually to ratings or comments”,
-“Reviews course performance metrics — absolute and relative to category”,
-“Receives AI-based trend highlights across own courses and Ferienpass portfolio”,
-“Reviews pipeline and updates course calendar”,
-“Shares course highlights and ratings on social media”,
-],
-touchpoints: [“Ferienpass website / app”, “Email / Push / SMS”, “Social media sharing policy TBD”],
-painPoints: [
-“TBC: Offline feedback with limited availability to providers”,
-“Ferienpass portfolio management done manually — insights inaccessible to providers”,
-“Manipulation of media assets done offline — cumbersome for most providers”,
-],
-opportunities: [
-“Course ratings interface: assess, respond, save”,
-“Dedicated course space: content, media, updates”,
-“Management dashboard, calendar integration”,
-“Detailed post-course performance metrics”,
-“One-click action: rerun, redesign, reshuffle, retire”,
-“Advanced AI personalization & assistance”,
-“Trend highlights: portfolio / course / season”,
-],
-},
-],
-},
-};
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ferienpass – Customer Journey Map</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', 'Helvetica Neue', Arial, sans-serif; background: #f8f7f4; color: #1a1a2e; }
+    button { font-family: inherit; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f3f4f6; }
+    ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
 
-const Tag = ({ children, color = “#4f46e5”, bg, border }) => (
-<span style={{
-display: “inline-block”,
-padding: “3px 10px”,
-borderRadius: 20,
-fontSize: 11.5,
-fontWeight: 600,
-background: bg || color + “15”,
-color,
-border: `1px solid ${border || color + "30"}`,
-marginRight: 6,
-marginBottom: 5,
-lineHeight: 1.6,
-}}>{children}</span>
-);
+  <script type="text/babel">
+    const { useState } = React;
 
-export default function JourneyMapApp() {
-const [persona, setPersona] = useState(“claudia”);
-const [activePhase, setActivePhase] = useState(0);
-const [tab, setTab] = useState(“actions”);
-const [lang, setLang] = useState(“en”);
+    const CLAUDIA = {
+      name: "Claudia Meier",
+      role: "Parent / Elternteil",
+      emoji: "👩‍👧‍👦",
+      color: "#4f46e5",
+      accent: "#818cf8",
+      light: "#eef2ff",
+      border: "#c7d2fe",
+      tagline: "Working mother, Basel — 2 kids, 14 holiday weeks/year",
+      phases: [
+        {
+          id: "profile",
+          title: "Creating Family Profile",
+          titleDE: "Familienprofil erstellen",
+          emotion: "😒",
+          emotionLabel: "Frustrated",
+          actions: [
+            "Lands on homepage",
+            "Signs up with email & password",
+            "Completes guided family profile setup",
+            "Saves payment method",
+            "Invites kids to complete AI interest profile",
+            "Sets up vacation calendar",
+            "Activates course availability reminders",
+          ],
+          touchpoints: ["Ferienpass website / app", "Email / Push / SMS / WhatsApp", "Payment providers"],
+          painPoints: [
+            "Homepage feels cluttered, outdated and confusing",
+            "Sign up is generic — no social logins, too many fields",
+            "Kids profiles missing — no personalized views",
+            "No calendar view — planning is fragmented",
+            "Multi-step manual payment process — no modern integrations",
+          ],
+          opportunities: [
+            "Modern, uncluttered, engaging website",
+            "Streamlined sign up / sign in process",
+            "Integrated modern payment methods (TWINT, Apple Pay, PayPal)",
+            "Planning features, calendar view & integration (iCal, Google Calendar)",
+            "Advanced AI personalization & assistance",
+            "Visually engaging kids interest profiling",
+          ],
+        },
+        {
+          id: "ferienpass",
+          title: "Purchasing Ferienpass",
+          titleDE: "Ferienpass kaufen",
+          emotion: "🥵",
+          emotionLabel: "Overwhelmed",
+          actions: [
+            "Reviews clear benefits and pricing of Ferienpass",
+            "Purchases Ferienpass using saved payment method",
+            "Receives purchase confirmation",
+            "Adds Ferienpass to Apple Wallet or downloads as PDF",
+          ],
+          touchpoints: ["Ferienpass website / app", "Email / Push / SMS", "Digital wallet / PDF viewer"],
+          painPoints: [
+            "Ferienpass as paywall blocking course access",
+            "Lengthy acquisition of physical pass — repeats annually!",
+            "Physical Ferienpass frequently lost or forgotten",
+            "Multi-step manual payment — no modern integrations",
+          ],
+          opportunities: [
+            "Digital Ferienpass visible to all stakeholders",
+            "TBD: How to connect digital pass with TNW?",
+            "Integrated modern payment methods",
+            "Credit / debit, TWINT, Apple / Google Pay",
+          ],
+        },
+        {
+          id: "browse",
+          title: "Browsing Available Courses",
+          titleDE: "Kurse durchsuchen",
+          emotion: "🤔",
+          emotionLabel: "Uncertain",
+          actions: [
+            "Receives course availability reminders",
+            "Filters and browses available courses",
+            "Views course details",
+            "Reads reviews and ratings",
+            "Saves favorites",
+            "Organizes favorites into smart lists",
+            "Drags and drops courses onto vacation calendar",
+          ],
+          touchpoints: ["Ferienpass website / app", "Email / Push / SMS"],
+          painPoints: [
+            "Missing personalized suggestions and smart filtering",
+            "Filtering options manual and limited — results feel generic",
+            "Course presentation text heavy — not excitement inducing",
+            "No references, ratings and reviews, missing demand notification",
+            "No shortlists, free seat notifications or calendar views",
+          ],
+          opportunities: [
+            "Visually rich, unified course presentation",
+            "Planning features, calendar view & integration",
+            "Course favorites, lists, drag & drop into calendar",
+            "Advanced AI personalization & assistance",
+            "Smart filtering & course suggestions",
+          ],
+        },
+        {
+          id: "booking",
+          title: "Booking a Course",
+          titleDE: "Kurs buchen",
+          emotion: "🤨",
+          emotionLabel: "Anxious",
+          actions: [
+            "Selects course from calendar or favorites",
+            "Checks available spots and session dates",
+            "Selects child to enroll",
+            "Reviews course summary and total cost",
+            "Confirms booking (payment timing TBD)",
+            "Receives booking confirmation",
+            "Joins waitlist for fully booked course",
+          ],
+          touchpoints: ["Ferienpass website / app", "Email / Push / SMS", "Payment provider platforms (Stripe, Twint)"],
+          painPoints: [
+            "Anxiety inducing booking deadline race",
+            "Unclear & not-visible waitlist and matching process — no guarantees",
+            "Multi-step manual payment — no modern integrations",
+          ],
+          opportunities: [
+            "Integrated modern payment methods (Credit / debit, TWINT, Apple / Google Pay, PayPal)",
+            "Planning features, calendar view & integration",
+            "Visible waitlists, transparent matching",
+            "Ferienpass / course booking gift vouchers",
+            "Advanced AI personalization & assistance",
+            "Alternative suggestions, proactive change advice",
+          ],
+        },
+        {
+          id: "changes",
+          title: "Managing Booking Changes",
+          titleDE: "Buchungsaenderungen",
+          emotion: "🤬",
+          emotionLabel: "Angry",
+          actions: [
+            "Initiates cancellation of booking",
+            "Reviews applicable cancellation policy and fees",
+            "Confirms cancellation",
+            "Receives refund or credit note",
+            "Receives notification of available waitlist spot",
+            "Reviews course details and confirms interest",
+            "Confirms enrollment from waitlist",
+            "Receives AI-based course alternatives",
+          ],
+          touchpoints: ["Ferienpass website / app", "Email / Push / SMS", "Payment provider platforms"],
+          painPoints: [
+            "Unclear & not-visible waitlist and matching process — no guarantees",
+            "Any organizational change is unpredictable and heavily phone call dependent",
+            "Multi-step manual payment — no modern integrations",
+          ],
+          opportunities: [
+            "Transparent, positively gamified waitlist process",
+            "Integrated modern payment methods",
+            "Visible waitlists, transparent matching",
+            "Advanced AI personalization & assistance",
+            "Alternative suggestions, proactive change advice",
+          ],
+        },
+        {
+          id: "courseinfo",
+          title: "Course Info & Live Updates",
+          titleDE: "Kursinfos & Live-Updates",
+          emotion: "😧",
+          emotionLabel: "Worried",
+          actions: [
+            "Receives course updates and change notifications",
+            "Receives standard preparation package",
+            "Receives dynamic preparation updates (location, weather)",
+            "Receives real-time child arrival notice (check-in)",
+            "Receives live updates, location tracking and photos",
+            "Receives incident or welfare notifications if needed",
+          ],
+          touchpoints: ["Ferienpass website / app", "Email / Push / SMS / WhatsApp"],
+          painPoints: [
+            "Quality of course info inconsistent",
+            "Updates are sporadic and heavily email dependent (lagging)",
+            "No live and dynamic updates before course",
+            "No interaction during course",
+          ],
+          opportunities: [
+            "Unified communication content & channels",
+            "Dynamic location & weather updates",
+            "Dedicated course space: content, media, updates",
+            "Advanced AI personalization & assistance",
+            "Live updates on request",
+          ],
+        },
+        {
+          id: "assess",
+          title: "Assessing Experience & Replanning",
+          titleDE: "Erfahrung bewerten & neu planen",
+          emotion: "😴",
+          emotionLabel: "Disengaged",
+          actions: [
+            "Reviews course tokens and media (photos, art)",
+            "Generates AI-assisted photo memory with music",
+            "Kids complete entertaining age-appropriate course rating",
+            "Adds optional parent comment or rating",
+            "Receives AI-driven course suggestions",
+            "Reviews & updates upcoming holiday weeks",
+            "Shares course experience with family and other parents",
+          ],
+          touchpoints: ["Ferienpass website / app", "Email / Push / SMS", "Social media (TBD)"],
+          painPoints: [
+            "No calendar view — planning is fragmented and not intuitive",
+            "Only offline feedback form — no transparent reviews or ratings",
+            "Course tokens and media highly inconsistent",
+          ],
+          opportunities: [
+            "Engaging course rating for kids and parents",
+            "Loyalty and reward mechanic features available",
+            "Dedicated course space: content, media, updates",
+            "Planning features, calendar view & integration",
+            "Highlights next key dates and vacation spaces",
+            "Advanced AI personalization & assistance",
+            "Next course suggestions, planning assistance",
+          ],
+        },
+      ],
+    };
 
-const p = data[persona];
-const phase = p.phases[activePhase];
+    const FABIO = {
+      name: "Fabio Landi",
+      role: "Course Provider / Kursanbieter",
+      emoji: "🎸",
+      color: "#d97706",
+      accent: "#fbbf24",
+      light: "#fffbeb",
+      border: "#fde68a",
+      tagline: "Freelance musician & teacher, Gundeli Basel — 10 years community",
+      phases: [
+        {
+          id: "provprofile",
+          title: "Creating Provider Profile",
+          titleDE: "Anbieter-Profil erstellen",
+          emotion: "😒",
+          emotionLabel: "Frustrated",
+          actions: [
+            "Lands on attractive, modern homepage",
+            "Signs up / signs in with email and password",
+            "Verifies email address and phone number",
+            "Completes guided provider profile setup",
+            "Uploads provider identity materials and brand assets",
+            "Saves payment method",
+            "Customizes provider dashboard and course calendar",
+            "Customizes and activates dashboard reminders",
+          ],
+          touchpoints: ["Ferienpass website / app", "Email / Push / SMS / WhatsApp", "Payment providers"],
+          painPoints: [
+            "Homepage feels cluttered, outdated and confusing",
+            "Sign up is cumbersome — no social logins, too many fields, missing guidance",
+            "Planning features are limited — no management dashboards, missing calendar view",
+            "Multi-step manual payment — no modern payment integrations",
+            "Provider / brand identity asset library is missing",
+          ],
+          opportunities: [
+            "Modern, uncluttered, engaging website",
+            "Streamlined sign up / sign in process",
+            "Provider brand & course asset library",
+            "Management dashboard, calendar integration (iCal, Google Calendar)",
+            "Integrated modern payment methods (Credit / debit, TWINT, Apple / Google Pay, PayPal)",
+          ],
+        },
+        {
+          id: "portfolio",
+          title: "Setting Up Course Portfolio",
+          titleDE: "Kursportfolio aufbauen",
+          emotion: "🤯",
+          emotionLabel: "Overwhelmed",
+          actions: [
+            "Analyzes Ferienpass portfolio and AI-based opportunity flags",
+            "Creates a new course or chooses from course library",
+            "Selects a visual course presentation template",
+            "Uploads raw media content from multiple sources",
+            "Reviews and finalizes AI-drafted course presentation",
+            "Records and uploads personal video message (optional)",
+            "Reviews AI-generated quality readiness checklist before publishing",
+            "Saves course as draft or submits for Ferienpass pricing review",
+            "Receives pricing decision and publishes course with one click",
+          ],
+          touchpoints: ["Ferienpass website / app", "Email / Push / SMS", "Multiple sources of course media"],
+          painPoints: [
+            "Course presentation is not engaging and consistent — lacking media, text-heavy",
+            "Artificial limits of 10 courses per day limit capacity",
+            "Ferienpass cost-benchmark pricing favors low-cost courses — discouraging high-quality offers",
+            "Course setup lacks assistance — limiting quality of presentation visuals",
+            "Course visuals cannot be saved and reused — even returning courses done from scratch",
+          ],
+          opportunities: [
+            "Unified visual course presentation templates",
+            "Course lists: Drafts, templates, published, folders",
+            "Provider brand & course asset library",
+            "Embedded pricing review & approval workflow",
+            "Comprehensive course presentation assistance",
+            "Advanced AI personalization & assistance",
+            "Ferienpass portfolio opportunity flags",
+            "AI-based quality checklist before publishing",
+          ],
+        },
+        {
+          id: "enrollments",
+          title: "Monitoring Enrollments & Waitlist",
+          titleDE: "Anmeldungen & Warteliste",
+          emotion: "🤢",
+          emotionLabel: "Anxious",
+          actions: [
+            "Reviews enrollment using provider dashboard (views, signups, revenue forecast)",
+            "Monitors waitlist size and excess demand per course",
+            "Receives demand notifications — waitlist exceeding threshold",
+            "Responds to demand — publishes new cohort with one click",
+            "Receives course enrollment payments",
+          ],
+          touchpoints: ["Ferienpass website / app", "Email / Push / SMS / WhatsApp", "Payment provider platforms"],
+          painPoints: [
+            "Enrollment status and excess demand hidden from providers",
+            "Participant lists sent only two days in advance",
+            "Providers only receive payments after course is completed — impacts cashflow",
+          ],
+          opportunities: [
+            "Management dashboard, calendar integration",
+            "Live course enrollment and demand waitlist",
+            "Customizable notifications & action workflows",
+            "Category course comparison and standings",
+            "Integrated modern payment methods",
+            "TBD: Waitlist process and matching logic",
+            "TBD: Payment and cancellation variants",
+          ],
+        },
+        {
+          id: "delivering",
+          title: "Delivering Course & Updates",
+          titleDE: "Kurs durchführen & Updates",
+          emotion: "😊",
+          emotionLabel: "Engaged",
+          actions: [
+            "Reviews participant details in dedicated course space",
+            "Sends out standard preparation package to participants",
+            "Sends out one-off course updates using notification templates",
+            "Receives dynamic preparation updates (location, weather)",
+            "Checks in kids on arrival (triggering real-time arrival notice to parents)",
+            "Shares live updates, location and photos in course space",
+            "Sends incident or welfare notifications if needed",
+          ],
+          touchpoints: ["Ferienpass website / app", "Email / Push / SMS / WhatsApp"],
+          painPoints: [
+            "No guidance or support on communication before and during courses",
+            "No dedicated course space to upload course tokens and media",
+          ],
+          opportunities: [
+            "Unified communication templates and channels",
+            "Dedicated course space: content, media, updates",
+            "Dynamic location & weather updates",
+            "Advanced AI personalization & assistance",
+            "Live updates from dedicated course space",
+          ],
+        },
+        {
+          id: "performance",
+          title: "Assessing Performance & Replanning",
+          titleDE: "Performance & Neuplanung",
+          emotion: "🤔",
+          emotionLabel: "Reflective",
+          actions: [
+            "Reviews and curates course tokens and media",
+            "Generates AI-assisted photo memory for future course presentations",
+            "Records and uploads personal thank you message",
+            "Reviews incoming kids and parent ratings and comments",
+            "Responds individually to ratings or comments",
+            "Reviews course performance metrics relative to category",
+            "Receives AI-based trend highlights across own courses and portfolio",
+            "Reviews pipeline and updates course calendar",
+            "Shares course highlights and ratings on social media",
+          ],
+          touchpoints: ["Ferienpass website / app", "Email / Push / SMS", "Social media sharing policy TBD"],
+          painPoints: [
+            "Offline feedback with limited availability to providers",
+            "Ferienpass portfolio management done manually — insights inaccessible to providers",
+            "Manipulation of media assets done offline — cumbersome for most providers",
+          ],
+          opportunities: [
+            "Course ratings interface: assess, respond, save",
+            "Dedicated course space: content, media, updates",
+            "Management dashboard, calendar integration",
+            "Detailed post-course performance metrics",
+            "One-click action: rerun, redesign, reshuffle, retire",
+            "Advanced AI personalization & assistance",
+            "Trend highlights: portfolio / course / season",
+          ],
+        },
+      ],
+    };
 
-const tabLabels = {
-actions: lang === “en” ? “Actions” : “Aktionen”,
-touchpoints: lang === “en” ? “Touchpoints” : “Berührungspunkte”,
-painpoints: lang === “en” ? “Pain Points” : “Schmerzpunkte”,
-opportunities: lang === “en” ? “Opportunities” : “Chancen”,
-};
+    const DATA = { claudia: CLAUDIA, fabio: FABIO };
 
-const emotionScale = p.phases.map(ph => ph.emotion);
-
-return (
-<div style={{
-fontFamily: “‘DM Sans’, ‘Helvetica Neue’, Arial, sans-serif”,
-background: “#f8f7f4”,
-minHeight: “100vh”,
-color: “#1a1a2e”,
-}}>
-
-```
-  {/* Top Bar */}
-  <header style={{
-    background: "#fff",
-    borderBottom: "1px solid #e8e4df",
-    padding: "0 32px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    height: 58,
-    position: "sticky",
-    top: 0,
-    zIndex: 100,
-  }}>
-    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-      <div style={{
-        width: 28, height: 28, borderRadius: 8,
-        background: "#1a1a2e",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        fontSize: 14,
-      }}>🗺</div>
-      <span style={{ fontWeight: 800, fontSize: 15, letterSpacing: "-0.02em" }}>Ferienpass</span>
-      <span style={{ color: "#9ca3af", fontSize: 13, marginLeft: 2 }}>/ Journey Map</span>
-    </div>
-
-    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      {/* Persona Switcher */}
-      <div style={{
-        display: "flex",
-        background: "#f3f4f6",
-        borderRadius: 10,
-        padding: 3,
-        gap: 3,
-      }}>
-        {["claudia", "fabio"].map(key => (
-          <button key={key} onClick={() => { setPersona(key); setActivePhase(0); setTab("actions"); }} style={{
-            padding: "6px 14px",
-            borderRadius: 8,
-            border: "none",
-            cursor: "pointer",
-            fontSize: 12.5,
-            fontWeight: 700,
-            background: persona === key ? "#fff" : "transparent",
-            color: persona === key ? data[key].color : "#6b7280",
-            boxShadow: persona === key ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
-            transition: "all 0.15s",
-          }}>
-            {data[key].emoji} {data[key].name.split(" ")[0]}
-          </button>
-        ))}
-      </div>
-
-      {/* Lang toggle */}
-      <button onClick={() => setLang(lang === "en" ? "de" : "en")} style={{
-        padding: "6px 12px",
-        borderRadius: 8,
-        border: "1px solid #e5e7eb",
+    const s = {
+      page: { background: "#f8f7f4", minHeight: "100vh", color: "#1a1a2e" },
+      header: {
         background: "#fff",
-        color: "#374151",
-        cursor: "pointer",
-        fontSize: 12,
-        fontWeight: 700,
-      }}>{lang === "en" ? "DE" : "EN"}</button>
-    </div>
-  </header>
-
-  <div style={{ maxWidth: 1100, margin: "0 auto", padding: "28px 24px" }}>
-
-    {/* Persona Card */}
-    <div style={{
-      background: "#fff",
-      border: `1px solid ${p.border}`,
-      borderRadius: 16,
-      padding: "20px 24px",
-      marginBottom: 24,
-      display: "flex",
-      alignItems: "center",
-      gap: 20,
-      background: `linear-gradient(135deg, ${p.light} 0%, #fff 100%)`,
-    }}>
-      <div style={{
-        width: 54, height: 54, borderRadius: "50%",
-        background: `linear-gradient(135deg, ${p.color}, ${p.accent})`,
-        display: "flex", alignItems: "center", justifyContent: "center",
-        fontSize: 22, flexShrink: 0,
-      }}>{p.emoji}</div>
-      <div style={{ flex: 1 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
-          <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800, letterSpacing: "-0.02em" }}>{p.name}</h2>
-          <Tag color={p.color}>{p.role}</Tag>
-        </div>
-        <p style={{ margin: 0, fontSize: 13, color: "#6b7280" }}>{p.tagline}</p>
-      </div>
-      <div style={{ textAlign: "right" }}>
-        <div style={{ fontSize: 11, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
-          {lang === "en" ? "Journey phases" : "Phasen"}
-        </div>
-        <div style={{ fontSize: 22, fontWeight: 800, color: p.color }}>{p.phases.length}</div>
-      </div>
-    </div>
-
-    {/* Emotion Timeline */}
-    <div style={{
-      background: "#fff",
-      border: "1px solid #e8e4df",
-      borderRadius: 14,
-      padding: "16px 20px",
-      marginBottom: 20,
-    }}>
-      <div style={{ fontSize: 11, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>
-        {lang === "en" ? "Emotional Journey" : "Emotionaler Verlauf"}
-      </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 0 }}>
-        {p.phases.map((ph, i) => (
-          <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", position: "relative" }}>
-            {i < p.phases.length - 1 && (
-              <div style={{
-                position: "absolute",
-                top: 14,
-                left: "50%",
-                width: "100%",
-                height: 2,
-                background: i < activePhase ? p.color : "#e5e7eb",
-                zIndex: 0,
-              }} />
-            )}
-            <button onClick={() => { setActivePhase(i); setTab("actions"); }} style={{
-              width: 30, height: 30,
-              borderRadius: "50%",
-              border: `2px solid ${activePhase === i ? p.color : "#e5e7eb"}`,
-              background: activePhase === i ? p.color : i < activePhase ? p.light : "#fff",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 14, cursor: "pointer",
-              zIndex: 1,
-              position: "relative",
-              transition: "all 0.2s",
-              boxShadow: activePhase === i ? `0 0 0 4px ${p.color}22` : "none",
-            }}>{ph.emotion}</button>
-            <div style={{
-              fontSize: 10, marginTop: 6, textAlign: "center",
-              color: activePhase === i ? p.color : "#9ca3af",
-              fontWeight: activePhase === i ? 700 : 400,
-              lineHeight: 1.3,
-              maxWidth: 80,
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}>
-              {lang === "en" ? ph.title.split(" ").slice(0, 2).join(" ") : ph.titleDE.split(" ").slice(0, 2).join(" ")}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-
-    {/* Phase Navigator */}
-    <div style={{ display: "flex", gap: 8, marginBottom: 20, overflowX: "auto", paddingBottom: 4 }}>
-      {p.phases.map((ph, i) => (
-        <button key={i} onClick={() => { setActivePhase(i); setTab("actions"); }} style={{
-          flexShrink: 0,
-          padding: "8px 14px",
-          borderRadius: 10,
-          border: `1.5px solid ${activePhase === i ? p.color : "#e5e7eb"}`,
-          background: activePhase === i ? p.color : "#fff",
-          color: activePhase === i ? "#fff" : "#374151",
-          cursor: "pointer",
-          fontSize: 12.5,
-          fontWeight: 600,
-          display: "flex",
-          alignItems: "center",
-          gap: 6,
-          transition: "all 0.15s",
-        }}>
-          <span>{ph.emotion}</span>
-          <span>{lang === "en" ? ph.title : ph.titleDE}</span>
-        </button>
-      ))}
-    </div>
-
-    {/* Phase Detail */}
-    <div style={{
-      background: "#fff",
-      border: `1.5px solid ${p.border}`,
-      borderRadius: 16,
-      overflow: "hidden",
-    }}>
-      {/* Phase Header */}
-      <div style={{
-        padding: "22px 28px",
-        borderBottom: "1px solid #f3f4f6",
-        background: `linear-gradient(135deg, ${p.light}, #fff)`,
+        borderBottom: "1px solid #e8e4df",
+        padding: "0 32px",
         display: "flex",
-        justifyContent: "space-between",
-        alignItems: "flex-start",
-      }}>
-        <div>
-          <div style={{ fontSize: 11, fontWeight: 700, color: p.color, textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 6 }}>
-            {lang === "en" ? "Phase" : "Phase"} {activePhase + 1} / {p.phases.length}
-          </div>
-          <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, letterSpacing: "-0.03em" }}>
-            {lang === "en" ? phase.title : phase.titleDE}
-          </h2>
-        </div>
-        <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: 40 }}>{phase.emotion}</div>
-          <div style={{ fontSize: 11, color: "#9ca3af", fontWeight: 600 }}>{phase.emotionLabel}</div>
-        </div>
-      </div>
-
-      {/* Tabs */}
-      <div style={{
-        display: "flex",
-        borderBottom: "1px solid #f3f4f6",
-        padding: "0 28px",
-      }}>
-        {Object.entries(tabLabels).map(([key, label]) => {
-          const counts = {
-            actions: phase.actions.length,
-            touchpoints: phase.touchpoints.length,
-            painpoints: phase.painPoints.length,
-            opportunities: phase.opportunities.length,
-          };
-          const colors = {
-            actions: "#4f46e5",
-            touchpoints: "#059669",
-            painpoints: "#dc2626",
-            opportunities: "#d97706",
-          };
-          return (
-            <button key={key} onClick={() => setTab(key)} style={{
-              padding: "14px 16px",
-              border: "none",
-              borderBottom: `3px solid ${tab === key ? p.color : "transparent"}`,
-              background: "none",
-              color: tab === key ? p.color : "#6b7280",
-              cursor: "pointer",
-              fontSize: 13,
-              fontWeight: tab === key ? 700 : 500,
-              display: "flex",
-              alignItems: "center",
-              gap: 7,
-              transition: "all 0.15s",
-              marginRight: 4,
-            }}>
-              {label}
-              <span style={{
-                background: tab === key ? p.color + "20" : "#f3f4f6",
-                color: tab === key ? p.color : "#9ca3af",
-                borderRadius: 20,
-                padding: "1px 7px",
-                fontSize: 11,
-                fontWeight: 700,
-              }}>{counts[key]}</span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Tab Content */}
-      <div style={{ padding: "24px 28px" }}>
-
-        {tab === "actions" && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {phase.actions.map((action, i) => (
-              <div key={i} style={{
-                display: "flex",
-                alignItems: "flex-start",
-                gap: 14,
-                padding: "12px 16px",
-                background: "#f9fafb",
-                borderRadius: 10,
-                border: "1px solid #f3f4f6",
-              }}>
-                <div style={{
-                  width: 24, height: 24, borderRadius: "50%",
-                  background: p.color,
-                  color: "#fff",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 11, fontWeight: 800, flexShrink: 0,
-                }}>{i + 1}</div>
-                <span style={{ fontSize: 13.5, color: "#374151", lineHeight: 1.5 }}>{action}</span>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {tab === "touchpoints" && (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
-            {phase.touchpoints.map((tp, i) => (
-              <div key={i} style={{
-                padding: "10px 16px",
-                background: "#f0fdf4",
-                border: "1px solid #bbf7d0",
-                borderRadius: 10,
-                fontSize: 13,
-                fontWeight: 600,
-                color: "#166534",
-                display: "flex", alignItems: "center", gap: 8,
-              }}>
-                <span>📡</span> {tp}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {tab === "painpoints" && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {phase.painPoints.map((pp, i) => (
-              <div key={i} style={{
-                padding: "12px 16px",
-                background: "#fef2f2",
-                border: "1px solid #fecaca",
-                borderRadius: 10,
-                fontSize: 13,
-                color: "#991b1b",
-                lineHeight: 1.5,
-                display: "flex", alignItems: "flex-start", gap: 10,
-              }}>
-                <span style={{ fontSize: 16, flexShrink: 0 }}>🔥</span>
-                {pp}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {tab === "opportunities" && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {phase.opportunities.map((op, i) => (
-              <div key={i} style={{
-                padding: "12px 16px",
-                background: "#fffbeb",
-                border: "1px solid #fde68a",
-                borderRadius: 10,
-                fontSize: 13,
-                color: "#92400e",
-                lineHeight: 1.5,
-                display: "flex", alignItems: "flex-start", gap: 10,
-              }}>
-                <span style={{ fontSize: 16, flexShrink: 0 }}>✦</span>
-                {op}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Phase Navigation Footer */}
-      <div style={{
-        padding: "16px 28px",
-        borderTop: "1px solid #f3f4f6",
-        display: "flex",
-        justifyContent: "space-between",
         alignItems: "center",
-      }}>
-        <button
-          onClick={() => { if (activePhase > 0) { setActivePhase(activePhase - 1); setTab("actions"); } }}
-          disabled={activePhase === 0}
-          style={{
-            padding: "8px 18px",
-            borderRadius: 8,
-            border: "1px solid #e5e7eb",
-            background: activePhase === 0 ? "#f9fafb" : "#fff",
-            color: activePhase === 0 ? "#d1d5db" : "#374151",
-            cursor: activePhase === 0 ? "default" : "pointer",
-            fontSize: 13, fontWeight: 600,
-          }}>← {lang === "en" ? "Previous" : "Zurück"}</button>
+        justifyContent: "space-between",
+        height: "58px",
+        position: "sticky",
+        top: 0,
+        zIndex: 100,
+      },
+      main: { maxWidth: "1100px", margin: "0 auto", padding: "28px 24px" },
+    };
 
-        <div style={{ display: "flex", gap: 6 }}>
-          {p.phases.map((_, i) => (
-            <div key={i} onClick={() => { setActivePhase(i); setTab("actions"); }} style={{
-              width: i === activePhase ? 20 : 8,
-              height: 8,
-              borderRadius: 4,
-              background: i === activePhase ? p.color : "#e5e7eb",
-              cursor: "pointer",
-              transition: "all 0.2s",
-            }} />
-          ))}
-        </div>
+    function App() {
+      const [persona, setPersona] = useState("claudia");
+      const [activePhase, setActivePhase] = useState(0);
+      const [tab, setTab] = useState("actions");
+      const [lang, setLang] = useState("en");
 
-        <button
-          onClick={() => { if (activePhase < p.phases.length - 1) { setActivePhase(activePhase + 1); setTab("actions"); } }}
-          disabled={activePhase === p.phases.length - 1}
-          style={{
-            padding: "8px 18px",
-            borderRadius: 8,
-            border: "none",
-            background: activePhase === p.phases.length - 1 ? "#f9fafb" : p.color,
-            color: activePhase === p.phases.length - 1 ? "#d1d5db" : "#fff",
-            cursor: activePhase === p.phases.length - 1 ? "default" : "pointer",
-            fontSize: 13, fontWeight: 600,
-          }}>{lang === "en" ? "Next" : "Weiter"} →</button>
-      </div>
-    </div>
+      const p = DATA[persona];
+      const phase = p.phases[activePhase];
 
-    {/* Summary Footer */}
-    <div style={{
-      marginTop: 20,
-      display: "grid",
-      gridTemplateColumns: "repeat(4, 1fr)",
-      gap: 12,
-    }}>
-      {[
-        { label: lang === "en" ? "Total Phases" : "Phasen total", value: p.phases.length, color: p.color, icon: "◎" },
-        { label: lang === "en" ? "Total Actions" : "Aktionen total", value: p.phases.reduce((a, ph) => a + ph.actions.length, 0), color: "#4f46e5", icon: "▦" },
-        { label: lang === "en" ? "Pain Points" : "Schmerzpunkte", value: p.phases.reduce((a, ph) => a + ph.painPoints.length, 0), color: "#dc2626", icon: "🔥" },
-        { label: lang === "en" ? "Opportunities" : "Chancen", value: p.phases.reduce((a, ph) => a + ph.opportunities.length, 0), color: "#d97706", icon: "✦" },
-      ].map((s, i) => (
-        <div key={i} style={{
-          background: "#fff",
-          border: "1px solid #e8e4df",
-          borderRadius: 12,
-          padding: "16px 18px",
-          display: "flex",
-          alignItems: "center",
-          gap: 12,
-        }}>
-          <div style={{
-            width: 36, height: 36,
-            borderRadius: 10,
-            background: s.color + "15",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 16,
-          }}>{s.icon}</div>
-          <div>
-            <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.03em", color: s.color }}>{s.value}</div>
-            <div style={{ fontSize: 11, color: "#9ca3af", fontWeight: 600 }}>{s.label}</div>
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-</div>
-```
+      const switchPersona = (key) => {
+        setPersona(key);
+        setActivePhase(0);
+        setTab("actions");
+      };
 
-);
-}
+      const goNext = () => {
+        if (activePhase < p.phases.length - 1) {
+          setActivePhase(activePhase + 1);
+          setTab("actions");
+        }
+      };
+
+      const goPrev = () => {
+        if (activePhase > 0) {
+          setActivePhase(activePhase - 1);
+          setTab("actions");
+        }
+      };
+
+      const tabLabels = {
+        actions:      lang === "en" ? "Actions"      : "Aktionen",
+        touchpoints:  lang === "en" ? "Touchpoints"  : "Beruehrungspunkte",
+        painpoints:   lang === "en" ? "Pain Points"  : "Schmerzpunkte",
+        opportunities:lang === "en" ? "Opportunities": "Chancen",
+      };
+
+      const tabCounts = {
+        actions:       phase.actions.length,
+        touchpoints:   phase.touchpoints.length,
+        painpoints:    phase.painPoints.length,
+        opportunities: phase.opportunities.length,
+      };
+
+      const totalActions = p.phases.reduce((a, ph) => a + ph.actions.length, 0);
+      const totalPain    = p.phases.reduce((a, ph) => a + ph.painPoints.length, 0);
+      const totalOpp     = p.phases.reduce((a, ph) => a + ph.opportunities.length, 0);
+
+      return (
+        React.createElement("div", { style: s.page },
+
+          /* ── HEADER ── */
+          React.createElement("header", { style: s.header },
+            React.createElement("div", { style: { display:"flex", alignItems:"center", gap:"10px" } },
+              React.createElement("div", {
+                style: {
+                  width:"28px", height:"28px", borderRadius:"8px", background:"#1a1a2e",
+                  display:"flex", alignItems:"center", justifyContent:"center", fontSize:"14px",
+                }
+              }, "🗺"),
+              React.createElement("span", { style: { fontWeight:800, fontSize:"15px", letterSpacing:"-0.02em" } }, "Ferienpass"),
+              React.createElement("span", { style: { color:"#9ca3af", fontSize:"13px", marginLeft:"2px" } }, "/ Journey Map"),
+            ),
+            React.createElement("div", { style: { display:"flex", gap:"8px", alignItems:"center" } },
+              /* Persona switcher */
+              React.createElement("div", {
+                style: { display:"flex", background:"#f3f4f6", borderRadius:"10px", padding:"3px", gap:"3px" }
+              },
+                ["claudia","fabio"].map(key =>
+                  React.createElement("button", {
+                    key,
+                    onClick: () => switchPersona(key),
+                    style: {
+                      padding:"6px 14px", borderRadius:"8px", border:"none", cursor:"pointer",
+                      fontSize:"12.5px", fontWeight:700,
+                      background: persona === key ? "#fff" : "transparent",
+                      color: persona === key ? DATA[key].color : "#6b7280",
+                      boxShadow: persona === key ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
+                    }
+                  }, DATA[key].emoji + " " + DATA[key].name.split(" ")[0])
+                )
+              ),
+              /* Lang toggle */
+              React.createElement("button", {
+                onClick: () => setLang(lang === "en" ? "de" : "en"),
+                style: {
+                  padding:"6px 12px", borderRadius:"8px", border:"1px solid #e5e7eb",
+                  background:"#fff", color:"#374151", cursor:"pointer", fontSize:"12px", fontWeight:700,
+                }
+              }, lang === "en" ? "DE" : "EN"),
+            )
+          ),
+
+          /* ── MAIN ── */
+          React.createElement("div", { style: s.main },
+
+            /* Persona Card */
+            React.createElement("div", {
+              style: {
+                background: "linear-gradient(135deg, " + p.light + " 0%, #fff 100%)",
+                border: "1px solid " + p.border,
+                borderRadius:"16px", padding:"20px 24px", marginBottom:"24px",
+                display:"flex", alignItems:"center", gap:"20px",
+              }
+            },
+              React.createElement("div", {
+                style: {
+                  width:"54px", height:"54px", borderRadius:"50%", flexShrink:0,
+                  background: "linear-gradient(135deg, " + p.color + ", " + p.accent + ")",
+                  display:"flex", alignItems:"center", justifyContent:"center", fontSize:"24px",
+                }
+              }, p.emoji),
+              React.createElement("div", { style: { flex:1 } },
+                React.createElement("div", { style: { display:"flex", alignItems:"center", gap:"10px", marginBottom:"4px" } },
+                  React.createElement("h2", { style: { margin:0, fontSize:"18px", fontWeight:800, letterSpacing:"-0.02em" } }, p.name),
+                  React.createElement("span", {
+                    style: {
+                      padding:"3px 10px", borderRadius:"20px", fontSize:"11.5px", fontWeight:600,
+                      background: p.color + "15", color: p.color, border: "1px solid " + p.color + "30",
+                    }
+                  }, p.role),
+                ),
+                React.createElement("p", { style: { margin:0, fontSize:"13px", color:"#6b7280" } }, p.tagline),
+              ),
+              React.createElement("div", { style: { textAlign:"right" } },
+                React.createElement("div", { style: { fontSize:"11px", color:"#9ca3af", textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:"4px" } },
+                  lang === "en" ? "Journey phases" : "Phasen"
+                ),
+                React.createElement("div", { style: { fontSize:"22px", fontWeight:800, color: p.color } }, p.phases.length),
+              )
+            ),
+
+            /* Emotion Timeline */
+            React.createElement("div", {
+              style: {
+                background:"#fff", border:"1px solid #e8e4df",
+                borderRadius:"14px", padding:"16px 20px", marginBottom:"20px",
+              }
+            },
+              React.createElement("div", {
+                style: { fontSize:"11px", fontWeight:700, color:"#9ca3af", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:"12px" }
+              }, lang === "en" ? "Emotional Journey" : "Emotionaler Verlauf"),
+              React.createElement("div", { style: { display:"flex", alignItems:"center" } },
+                p.phases.map((ph, i) =>
+                  React.createElement("div", {
+                    key: ph.id,
+                    style: { flex:1, display:"flex", flexDirection:"column", alignItems:"center", position:"relative" },
+                  },
+                    i < p.phases.length - 1 && React.createElement("div", {
+                      style: {
+                        position:"absolute", top:"14px", left:"50%", width:"100%", height:"2px",
+                        background: i < activePhase ? p.color : "#e5e7eb", zIndex:0,
+                      }
+                    }),
+                    React.createElement("button", {
+                      onClick: () => { setActivePhase(i); setTab("actions"); },
+                      style: {
+                        width:"30px", height:"30px", borderRadius:"50%", cursor:"pointer",
+                        border: "2px solid " + (activePhase === i ? p.color : "#e5e7eb"),
+                        background: activePhase === i ? p.color : i < activePhase ? p.light : "#fff",
+                        display:"flex", alignItems:"center", justifyContent:"center",
+                        fontSize:"14px", zIndex:1, position:"relative",
+                        boxShadow: activePhase === i ? "0 0 0 4px " + p.color + "22" : "none",
+                      }
+                    }, ph.emotion),
+                    React.createElement("div", {
+                      style: {
+                        fontSize:"10px", marginTop:"6px", textAlign:"center",
+                        color: activePhase === i ? p.color : "#9ca3af",
+                        fontWeight: activePhase === i ? 700 : 400,
+                        lineHeight:1.3, maxWidth:"80px",
+                        overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap",
+                      }
+                    }, (lang === "en" ? ph.title : ph.titleDE).split(" ").slice(0,2).join(" "))
+                  )
+                )
+              )
+            ),
+
+            /* Phase Pills */
+            React.createElement("div", {
+              style: { display:"flex", gap:"8px", marginBottom:"20px", overflowX:"auto", paddingBottom:"4px" }
+            },
+              p.phases.map((ph, i) =>
+                React.createElement("button", {
+                  key: ph.id,
+                  onClick: () => { setActivePhase(i); setTab("actions"); },
+                  style: {
+                    flexShrink:0, padding:"8px 14px", borderRadius:"10px", cursor:"pointer",
+                    border: "1.5px solid " + (activePhase === i ? p.color : "#e5e7eb"),
+                    background: activePhase === i ? p.color : "#fff",
+                    color: activePhase === i ? "#fff" : "#374151",
+                    fontSize:"12.5px", fontWeight:600,
+                    display:"flex", alignItems:"center", gap:"6px",
+                  }
+                }, ph.emotion + " " + (lang === "en" ? ph.title : ph.titleDE))
+              )
+            ),
+
+            /* Phase Detail Card */
+            React.createElement("div", {
+              style: {
+                background:"#fff", border:"1.5px solid " + p.border,
+                borderRadius:"16px", overflow:"hidden", marginBottom:"20px",
+              }
+            },
+
+              /* Phase Header */
+              React.createElement("div", {
+                style: {
+                  padding:"22px 28px", borderBottom:"1px solid #f3f4f6",
+                  background: "linear-gradient(135deg, " + p.light + ", #fff)",
+                  display:"flex", justifyContent:"space-between", alignItems:"flex-start",
+                }
+              },
+                React.createElement("div", null,
+                  React.createElement("div", {
+                    style: { fontSize:"11px", fontWeight:700, color: p.color, textTransform:"uppercase", letterSpacing:"0.12em", marginBottom:"6px" }
+                  }, (lang === "en" ? "Phase" : "Phase") + " " + (activePhase + 1) + " / " + p.phases.length),
+                  React.createElement("h2", {
+                    style: { margin:0, fontSize:"22px", fontWeight:800, letterSpacing:"-0.03em" }
+                  }, lang === "en" ? phase.title : phase.titleDE),
+                ),
+                React.createElement("div", { style: { textAlign:"center" } },
+                  React.createElement("div", { style: { fontSize:"40px" } }, phase.emotion),
+                  React.createElement("div", { style: { fontSize:"11px", color:"#9ca3af", fontWeight:600 } }, phase.emotionLabel),
+                )
+              ),
+
+              /* Tabs */
+              React.createElement("div", {
+                style: { display:"flex", borderBottom:"1px solid #f3f4f6", padding:"0 28px", overflowX:"auto" }
+              },
+                Object.entries(tabLabels).map(([key, label]) =>
+                  React.createElement("button", {
+                    key,
+                    onClick: () => setTab(key),
+                    style: {
+                      padding:"14px 16px", border:"none",
+                      borderBottom:"3px solid " + (tab === key ? p.color : "transparent"),
+                      background:"none",
+                      color: tab === key ? p.color : "#6b7280",
+                      cursor:"pointer", fontSize:"13px", fontWeight: tab === key ? 700 : 500,
+                      display:"flex", alignItems:"center", gap:"7px", marginRight:"4px",
+                      whiteSpace:"nowrap",
+                    }
+                  },
+                    label,
+                    React.createElement("span", {
+                      style: {
+                        background: tab === key ? p.color + "20" : "#f3f4f6",
+                        color: tab === key ? p.color : "#9ca3af",
+                        borderRadius:"20px", padding:"1px 7px", fontSize:"11px", fontWeight:700,
+                      }
+                    }, tabCounts[key])
+                  )
+                )
+              ),
+
+              /* Tab Content */
+              React.createElement("div", { style: { padding:"24px 28px" } },
+
+                tab === "actions" && React.createElement("div", { style: { display:"flex", flexDirection:"column", gap:"10px" } },
+                  phase.actions.map((action, i) =>
+                    React.createElement("div", {
+                      key: i,
+                      style: {
+                        display:"flex", alignItems:"flex-start", gap:"14px",
+                        padding:"12px 16px", background:"#f9fafb",
+                        borderRadius:"10px", border:"1px solid #f3f4f6",
+                      }
+                    },
+                      React.createElement("div", {
+                        style: {
+                          width:"24px", height:"24px", borderRadius:"50%",
+                          background: p.color, color:"#fff", flexShrink:0,
+                          display:"flex", alignItems:"center", justifyContent:"center",
+                          fontSize:"11px", fontWeight:800,
+                        }
+                      }, i + 1),
+                      React.createElement("span", { style: { fontSize:"13.5px", color:"#374151", lineHeight:1.5 } }, action)
+                    )
+                  )
+                ),
+
+                tab === "touchpoints" && React.createElement("div", { style: { display:"flex", flexWrap:"wrap", gap:"10px" } },
+                  phase.touchpoints.map((tp, i) =>
+                    React.createElement("div", {
+                      key: i,
+                      style: {
+                        padding:"10px 16px", background:"#f0fdf4",
+                        border:"1px solid #bbf7d0", borderRadius:"10px",
+                        fontSize:"13px", fontWeight:600, color:"#166534",
+                        display:"flex", alignItems:"center", gap:"8px",
+                      }
+                    }, "📡 " + tp)
+                  )
+                ),
+
+                tab === "painpoints" && React.createElement("div", { style: { display:"flex", flexDirection:"column", gap:"10px" } },
+                  phase.painPoints.map((pp, i) =>
+                    React.createElement("div", {
+                      key: i,
+                      style: {
+                        padding:"12px 16px", background:"#fef2f2",
+                        border:"1px solid #fecaca", borderRadius:"10px",
+                        fontSize:"13px", color:"#991b1b", lineHeight:1.5,
+                        display:"flex", alignItems:"flex-start", gap:"10px",
+                      }
+                    },
+                      React.createElement("span", { style: { fontSize:"16px", flexShrink:0 } }, "🔥"),
+                      pp
+                    )
+                  )
+                ),
+
+                tab === "opportunities" && React.createElement("div", { style: { display:"flex", flexDirection:"column", gap:"10px" } },
+                  phase.opportunities.map((op, i) =>
+                    React.createElement("div", {
+                      key: i,
+                      style: {
+                        padding:"12px 16px", background:"#fffbeb",
+                        border:"1px solid #fde68a", borderRadius:"10px",
+                        fontSize:"13px", color:"#92400e", lineHeight:1.5,
+                        display:"flex", alignItems:"flex-start", gap:"10px",
+                      }
+                    },
+                      React.createElement("span", { style: { fontSize:"16px", flexShrink:0 } }, "✦"),
+                      op
+                    )
+                  )
+                )
+              ),
+
+              /* Footer Nav */
+              React.createElement("div", {
+                style: {
+                  padding:"16px 28px", borderTop:"1px solid #f3f4f6",
+                  display:"flex", justifyContent:"space-between", alignItems:"center",
+                }
+              },
+                React.createElement("button", {
+                  onClick: goPrev,
+                  disabled: activePhase === 0,
+                  style: {
+                    padding:"8px 18px", borderRadius:"8px",
+                    border:"1px solid #e5e7eb",
+                    background: activePhase === 0 ? "#f9fafb" : "#fff",
+                    color: activePhase === 0 ? "#d1d5db" : "#374151",
+                    cursor: activePhase === 0 ? "default" : "pointer",
+                    fontSize:"13px", fontWeight:600,
+                  }
+                }, "← " + (lang === "en" ? "Previous" : "Zurueck")),
+
+                React.createElement("div", { style: { display:"flex", gap:"6px" } },
+                  p.phases.map((_, i) =>
+                    React.createElement("div", {
+                      key: i,
+                      onClick: () => { setActivePhase(i); setTab("actions"); },
+                      style: {
+                        width: i === activePhase ? "20px" : "8px",
+                        height:"8px", borderRadius:"4px",
+                        background: i === activePhase ? p.color : "#e5e7eb",
+                        cursor:"pointer",
+                      }
+                    })
+                  )
+                ),
+
+                React.createElement("button", {
+                  onClick: goNext,
+                  disabled: activePhase === p.phases.length - 1,
+                  style: {
+                    padding:"8px 18px", borderRadius:"8px", border:"none",
+                    background: activePhase === p.phases.length - 1 ? "#f9fafb" : p.color,
+                    color: activePhase === p.phases.length - 1 ? "#d1d5db" : "#fff",
+                    cursor: activePhase === p.phases.length - 1 ? "default" : "pointer",
+                    fontSize:"13px", fontWeight:600,
+                  }
+                }, (lang === "en" ? "Next" : "Weiter") + " →"),
+              )
+            ),
+
+            /* Summary Footer */
+            React.createElement("div", {
+              style: { display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:"12px" }
+            },
+              [
+                { label: lang === "en" ? "Total Phases" : "Phasen total",     value: p.phases.length, color: p.color,   icon:"◎" },
+                { label: lang === "en" ? "Total Actions" : "Aktionen total",   value: totalActions,    color:"#4f46e5",  icon:"▦" },
+                { label: lang === "en" ? "Pain Points" : "Schmerzpunkte",      value: totalPain,       color:"#dc2626",  icon:"🔥" },
+                { label: lang === "en" ? "Opportunities" : "Chancen",          value: totalOpp,        color:"#d97706",  icon:"✦" },
+              ].map((stat, i) =>
+                React.createElement("div", {
+                  key: i,
+                  style: {
+                    background:"#fff", border:"1px solid #e8e4df",
+                    borderRadius:"12px", padding:"16px 18px",
+                    display:"flex", alignItems:"center", gap:"12px",
+                  }
+                },
+                  React.createElement("div", {
+                    style: {
+                      width:"36px", height:"36px", borderRadius:"10px",
+                      background: stat.color + "15",
+                      display:"flex", alignItems:"center", justifyContent:"center", fontSize:"16px",
+                    }
+                  }, stat.icon),
+                  React.createElement("div", null,
+                    React.createElement("div", { style: { fontSize:"22px", fontWeight:800, letterSpacing:"-0.03em", color: stat.color } }, stat.value),
+                    React.createElement("div", { style: { fontSize:"11px", color:"#9ca3af", fontWeight:600 } }, stat.label),
+                  )
+                )
+              )
+            )
+          )
+        )
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(React.createElement(App));
+  </script>
+
+</body>
+</html>
